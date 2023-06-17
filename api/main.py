@@ -30,8 +30,8 @@ def index():
                             'response_type': 'text/json',
                             'response_schema': {'original-code': 'type:String',
                                                 'optimized-code': "type:String",
-                                                'gas-saved': "type:Integer"},
-                            'description': 'Returns the Optimized source code along with the gas saved.'
+                                                'cse-optimized-code': "type:String"},
+                            'description': 'Returns the Optimized source code along with the cse optimized code.'
                          }
                     ]
                     })
@@ -46,7 +46,7 @@ def optimize_route():
     # print(body)
     optimized_code, cse_optimized_code = optimize(body['source'])
 
-    return jsonify({'original-code': body['source'], 'optimized-code': optimized_code, 'cse-optimized_code': cse_optimized_code})
+    return jsonify({'original-code': body['source'], 'optimized-code': optimized_code, 'cse-optimized-code': cse_optimized_code})
 
 
 # app.run(host='0.0.0.0')
