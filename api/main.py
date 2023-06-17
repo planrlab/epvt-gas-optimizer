@@ -38,15 +38,15 @@ def index():
 
 
 @ app.route('/optimize', methods=['POST'])
-def cfg_svg():
+def optimize_route():
     '''
     Route to get the SVG representation
     '''
     body = json.loads(request.data)
     # print(body)
-    optimized_code, gas_saved = optimize(body['source'])
+    optimized_code, cse_optimized_code = optimize(body['source'])
 
-    return jsonify({'original-code': body['source'], 'optimized-code': optimized_code, 'gas-saved': gas_saved})
+    return jsonify({'original-code': body['source'], 'optimized-code': optimized_code, 'cse-optimized_code': cse_optimized_code})
 
 
 # app.run(host='0.0.0.0')

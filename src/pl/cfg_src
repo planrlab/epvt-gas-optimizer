@@ -1,0 +1,81 @@
+digraph cluster_2 {
+	subgraph cluster_3 {
+		node [fillcolor="#ccccff" fontcolor=black fontname="Courier bold" fontsize=14 shape=box style=filled]
+		color=snow2 fillcolor=snow1 fontcolor="#1a0000" fontname="Courier bold" fontsize=16 label="Contract::Sample" style=filled
+		start_Sample [label="Contract Address" shape=Mdiamond style=filled]
+		stop_Sample [label=End shape=Msquare style=filled]
+		Contract -> start_Sample [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		subgraph cluster_4 {
+			node [color=black fillcolor=white fontcolor=black fontname="Courier bold italic" fontsize=12 shape=box style=filled]
+			color=snow2 fillcolor="#e6e6ff" fontcolor="#00004d" fontname="Courier bold italic" fontsize=14 label="Function::issue2" style=filled
+			START_issue2 [label=start shape=Mdiamond style=filled]
+			STOP_issue2 [label=stop shape=Msquare style=filled]
+			1 [label="uint a" shape=rectangle style=filled]
+			2 [label="uint b" shape=rectangle style=filled]
+			1 -> 2 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			3 [label="uint c" shape=rectangle style=filled]
+			2 -> 3 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			START_issue2 -> 1 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			4 [label=uint shape=rectangle style=filled]
+			3 -> 4 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			subgraph cluster_5 {
+				node [color=black fillcolor=snow1 fontcolor=black fontname="Courier bold" fontsize=12 shape=box style=filled]
+				fillcolor="#f5f5ef" fontcolor=darkslategray fontname="Courier bold" fontsize=16 label="" style=filled
+				5 [label="uint d" shape=rectangle style=filled]
+				6 [label="uint e" shape=rectangle style=filled]
+				5 -> 6 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				7 [label="uint f" shape=rectangle style=filled]
+				6 -> 7 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				8 [label="uint g" shape=rectangle style=filled]
+				7 -> 8 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				9 [label="uint h" shape=rectangle style=filled]
+				8 -> 9 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				10 [label="d = c +  b * a +  a * b" shape=rectangle style=filled]
+				9 -> 10 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				11 [label="e = a * b + c" shape=rectangle style=filled]
+				10 -> 11 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				12 [label="f = a * b + b * a" shape=rectangle style=filled]
+				11 -> 12 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				13 [label="g = b * a" shape=rectangle style=filled]
+				12 -> 13 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				14 [label="h = e + f + g" shape=rectangle style=filled]
+				13 -> 14 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				subgraph cluster_6 {
+					node [color=darkgreen fillcolor=white fontcolor=black fontsize=12 shape=box style=filled]
+					color=snow2 fillcolor="#ffe6e6" fontcolor=darkviolet fontname="Courier bold" fontsize=12 style=filled
+					EN_DW_1 [label=EN_DW_1 color=black fillcolor=darkgoldenrod fixedsize=true fontsize=10 shape=circle style=filled width=0.7]
+					CN_DW_1 [label=CN_DW_1 color=black fillcolor=darkgoldenrod fixedsize=true fontsize=10 shape=circle style=filled width=0.7]
+					JN_DW_1 [label=JN_DW_1 color=black fillcolor=darkgoldenrod fixedsize=true fontsize=10 shape=circle style=filled width=0.7]
+					subgraph cluster_7 {
+						node [color=red fillcolor=snow1 fontcolor=black fontname="Courier bold" fontsize=12 shape=box style=filled]
+						fillcolor="#ffcccc" fontcolor=darkslategray fontname="Courier bold" fontsize=16 label="" style=filled
+						15 [label="a = g" shape=rectangle style=filled]
+						16 [label="d = h +  b * a +  a * b" shape=rectangle style=filled]
+						15 -> 16 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+						17 [label="e = a * b + c" shape=rectangle style=filled]
+						16 -> 17 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+						18 [label="f = a * b + b * a" shape=rectangle style=filled]
+						17 -> 18 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+						19 [label="g = b * a" shape=rectangle style=filled]
+						18 -> 19 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+						20 [label="h = e + f + g" shape=rectangle style=filled]
+						19 -> 20 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+					}
+					EN_DW_1 -> 15 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+					21 [label="f>g" color=orange fillcolor="#ffff66" shape=diamond style=filled]
+					20 -> CN_DW_1 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+					CN_DW_1 -> 21 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+					21 -> EN_DW_1 [label=cnt color=darkgreen fillcolor=darkgreen fontcolor=darkgreen fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=bold]
+					21 -> JN_DW_1 [label=brk color=red fillcolor=red fontcolor=red fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=dashed]
+				}
+				14 -> EN_DW_1 [label=cnt color=darkgreen fillcolor=darkgreen fontcolor=darkgreen fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=bold]
+				22 [label="return d + h" shape=rectangle style=filled]
+				JN_DW_1 -> 22 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			}
+			4 -> 5 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			22 -> STOP_issue2 [label=return color="#4d004d" fillcolor="#4d004d" fontcolor="#4d004d" fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=bold]
+		}
+		start_Sample -> START_issue2 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		STOP_issue2 -> stop_Sample [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+	}
+}

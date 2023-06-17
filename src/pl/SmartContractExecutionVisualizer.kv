@@ -1,0 +1,1603 @@
+#: import main SmartContractExecutionVisualizer
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+#: import ListItemButton kivy.uix.listview.ListItemButton
+#: import SolidityLexer pygments_lexer_solidity.SolidityLexer
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
+<Opcode@ListItemButton>:
+	id:separator	      
+    selected_color: 0,1,0,1 #(0.223, 0.662, 0.015, 1) ##(0.15,1,0, 0.9)1, 0, 1, 0.768
+    deselected_color: 0,0,0,1 #(1, 0.984, 0.960, 1)#(0.984, 1, 0.709, 3)
+    bold: True
+	italic: True
+
+<Stack@ListItemButton>:
+	selected_color: 0,1,0,1 #.9, 0, 0, 1
+	deselected_color: 0,0,0,1 #0, 0, 0, 1
+    bold: True
+	font_size: '14sp'
+	
+<EVM@ListItemButton>:	      
+    selected_color: (0, 1, 0, 1)##(0.15,1,0, 0.9)1, 0, 1, 0.768
+    deselected_color: 0,0,1,1
+    bold: True
+	italic: True
+	halign: 'left'
+	    
+	
+<STORAGE@ListItemButton>
+	selected_color: (0, 1, 0, 1)##(0.15,1,0, 0.9)1, 0, 1, 0.768
+    deselected_color: 0,0,1,1
+    bold: True
+	italic: True
+	halign: 'left'
+	font_size: 15
+
+GUI:
+	file_input: file_input_text
+	compiled_output: compiled_output_text
+	opcode_comment:opcode_comment_text
+	opcodes_list: opcodes_list_view
+    stack_list: stack_list_view
+    memory_list: memory_list_view
+    storage_list: storage_list_view
+    sol_source_code: source_code
+    BoxLayout:
+    	canvas.before:
+            Color:
+                rgb: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    	orientation: 'vertical'
+    	
+    	BoxLayout:
+        	orientation: 'horizontal'
+        	size_hint_y: 0.10
+            ScaleLabel:
+            	id: img
+            	borders: 5, 'solid', (1,1,1,1)
+				bold: True
+				italic: True
+    			#text: "......Akshay......"
+    			size: 1, 0.5
+    			font_size: 44
+    			background_color: (0, 1, 0, 1)
+    			canvas.before:
+		            Rectangle:
+		                pos: self.parent.center_x - self.width / 2-3, self.parent.center_y - self.height / 2
+		                size: img.width, img.height#self.x, self.y * 70 #
+			        	source: '../../lib/img/app_title.png'
+			        	
+    
+        BoxLayout:
+        	orientation: 'horizontal'	
+            size_hint_y: 0.06
+            canvas.before:
+		        Color:
+		            rgba: 0.08,0.03,0.03, 1
+		        Line:
+		            width: 2
+		            rectangle: self.x, self.y, self.width, self.height
+            ScaleLabel:
+            	canvas.before:
+			        Color:
+			            rgba: 0.08,0.03,0.03, 1
+			        Line:
+			            width: 2
+			            rectangle: self.x, self.y, self.width, self.height
+    			pos_hint: {'center_x': .5, 'center_y': .5}
+    			borders: 5, 'solid', (1,0,0,1)
+        		canvas.before:
+					Color:
+						rgb: 0.44,0.15,0.49#0.18,0,1#0.156, 0.356, 0.886
+					Rectangle:
+						pos: self.pos
+						size: self.size
+				bold: True
+				italic: True
+    			text: "Environmental\nInformation"
+    			size_hint_x: 0.15
+    			background_color: (0, 1, 0, 1)
+    			
+            
+            BoxLayout:	
+        		orientation: 'vertical'
+        		size_hint_x: 0.10
+				pos_hint: {'center_x': .5, 'center_y': .5}
+	        	id: fun
+	        	canvas.before:
+			        Color:
+			            rgba: 0.08,0.03,0.03, 1
+			        Line:
+			            width: 2
+			            rectangle: self.x, self.y, self.width, self.height
+	        	ScaleLabel:
+	            	id:file_input_text
+	                size: self.size
+	            	borders: 5, 'solid', (1,0,0,1)
+	        		canvas.before:
+						Color:
+							rgb: 0.156, 0.356, 0.886#0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+						Rectangle:
+							pos: self.pos
+							size: self.size
+					bold: True
+					italic: True
+	    			text: "::GAS PRICE::"
+	    			background_color: (0, 1, 0, 1)
+	    			
+	        	TextInput:
+	        		id: gas_price
+	                text: '1'
+	                
+	                on_text: root.is_valid_gas_price(self.text)
+	        
+			
+            BoxLayout:
+        		orientation: 'vertical'
+        		size_hint: 0.3,0.99
+				pos_hint: {'center_x': .5, 'center_y': .5}
+	        	id: fun
+        		canvas.before:
+			        Color:
+			            rgba: 0.08,0.03,0.03, 1
+			        Line:
+			            width: 2
+			            rectangle: fun.x, fun.y, fun.width, fun.height
+        		ScaleLabel:
+        			id: sep
+        			borders: 5, 'solid', (1,0,0,1)
+					bold: True
+					italic: True
+        			background_color: (0, 1, 0, 1)
+        			text: "::User Account Addresses::"
+		    		size_hint: 1, 0.07
+        			pos_hint: {'center_x': .5, 'center_y': .5}
+		    		color: 0.08,0.03,0.03, 1
+		    		canvas.before:
+						Color:
+							rgba:1,1,1, 1
+						Rectangle:
+							pos: self.pos
+							size: self.size
+        			canvas:
+	        			Color:
+			                rgb: 1., 0., 0.
+			            Rectangle:
+			                pos: sep.x, sep.y
+			                size: sep.width, 2
+		    	Spinner:
+		            id: usr_acc
+				    canvas:
+	        			Color:
+			                rgba: 1,0,0, 1
+			            Rectangle:
+			                pos: usr_acc.x, usr_acc.y
+			                size: usr_acc.width, 2
+			        background_normal: ''
+					background_color: 26./255, 13./255, 0, 1
+		            size_hint: 1, 0.08
+        			pos_hint: {'center_x': .5, 'center_y': .5}
+		            important: True
+		            text: 'Select Account'
+		            bold: True
+		            on_text: root.change_address(self.text) if self.text.startswith("0x") else None
+		            
+			BoxLayout:
+        		orientation: 'vertical'
+        		size_hint: 0.4,0.99
+				pos_hint: {'center_x': .5, 'center_y': .5}
+	        	id: fun
+	        	canvas.before:
+			        Color:
+			            rgba: 0.08,0.03,0.03, 1
+			        Line:
+			            width: 2
+			            rectangle: self.x, self.y, self.width, self.height
+        		ScaleLabel:
+        			id: sep
+        			borders: 5, 'solid', (1,0,0,1)
+					bold: True
+					italic: True
+        			background_color: (0, 1, 0, 1)
+        			text: "::Deployed Contracts::"
+		    		size_hint: 1, 0.07
+        			pos_hint: {'center_x': .5, 'center_y': .5}
+        			canvas.before:
+						Color:
+							rgba:1,1,1, 1
+						Rectangle:
+							pos: self.pos
+							size: self.size
+        			canvas:
+	        			Color:
+			                rgb: 1., 0., 0.
+			            Rectangle:
+			                pos: sep.x, sep.y
+			                size: sep.width, 2
+			        color: 0.08,0.03,0.03, 1
+			        
+	            Spinner:
+		            id: cont_acc
+		            canvas:
+	        			Color:
+			                rgba: 1,0,0, 1
+			            Rectangle:
+			                pos: cont_acc.x, cont_acc.y
+			                size: cont_acc.width, 2
+			        
+			        background_normal: ''
+					background_color: 26./255, 13./255, 0, 1
+					color: 1,1,1,1       
+		            size_hint: 1, 0.08
+        			pos_hint: {'center_x': .5, 'center_y': .5}
+		            important: True
+		            text: 'Select Contract Address'
+		            bold: True
+		            on_text: root.load_contract(self.text) if self.text.startswith("0x") else None
+		            
+		BoxLayout:
+        	orientation: 'horizontal'
+        	canvas.before:
+		        Color:
+		            rgba: 0.08,0.03,0.03, 1
+		        Line:
+		            width: 2
+		            rectangle: self.x, self.y, self.width, self.height	
+            #size_hint_y: 0.1
+        	
+			#Splitter:
+	        #    sizable_from: 'right'
+	        #    min_size: '200pt'
+	        #    max_size: '200pt'
+	        #    strip_size: '10pt'
+			
+			#BoxLayout:
+			#	orientation: 'vertical'
+			#	size_hint: 1,1
+			#	pos_hint: {'center_x': .5, 'center_y': .5} 
+        	
+        	BoxLayout:
+        		orientation: 'horizontal'
+        		size_hint: 1,1
+        		canvas.before:
+			        Color:
+			            rgba: 0.08,0.03,0.03, 1
+			        Line:
+			            width: 2
+			            rectangle: self.x, self.y, self.width, self.height
+				
+				#Splitter:
+		        #    sizable_from: 'right'
+		        #    min_size: 850
+		        #    max_size: 1800
+		        #    strip_size: '10pt'
+				
+				BoxLayout:
+					canvas.before:
+				        Color:
+				            rgba: 0.08,0.03,0.03, 1
+				        Line:
+				            width: 2
+				            rectangle: self.x, self.y, self.width, self.height
+	        		orientation: 'vertical'
+	        		#pos_hint: {'center_x': .5, 'center_y': .5} 
+	        		#size_hint: 0.42,1
+	        		
+	        		ScaleLabel:
+	        			id: app_name
+	        			canvas.before:
+							Color:
+								#rgb: 0.51,0.49,0.49
+								rgb: 38./255, 0, 77./255
+								#rgb: 0.847, 0.878, 0.909
+							Rectangle:
+								pos: app_name.pos
+								size: app_name.size
+						bold: True
+						italic: True
+	        			text: "Solidity IDE"
+	        			markup:True
+	        			size_hint_y: 0.03
+	        			color: (1, 1, 1, 1)
+    			
+    				BoxLayout:
+    					orientation: 'horizontal'
+	    				size_hint_y: 0.05
+	    				BoxLayout:
+	    					orientation: 'vertical'
+		    				BoxLayout:
+		    					canvas.before:
+							        Color:
+							            rgba: 0.08,0.03,0.03, 1
+							        Line:
+							            width: 2
+							            rectangle: self.x, self.y, self.width, self.height
+		    					orientation: 'horizontal'
+				        		pos_hint: {'center_x': .5, 'center_y': .5} 
+				        		
+				        		
+				        		BoxLayout:	
+					        		orientation: 'vertical'
+					        		#size_hint: 0.25,0.99
+									pos_hint: {'center_x': .5, 'center_y': .5}
+						        	id: fun
+						        	canvas.before:
+								        Color:
+								            rgba: 0.08,0.03,0.03, 1
+								        Line:
+								            width: 2
+								            rectangle: self.x, self.y, self.width, self.height
+						        	ScaleLabel:
+						            	id:file_input_text
+						                size: self.size
+						            	borders: 5, 'solid', (1,0,0,1)
+						        		canvas.before:
+											Color:
+												rgb: 0.156, 0.356, 0.886#0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+											Rectangle:
+												pos: self.pos
+												size: self.size
+										bold: True
+										italic: True
+						    			text: "Select Solidity File"
+						    			background_color: (0, 1, 0, 1)
+						    			
+						        	ScaleButton:
+						                text: 'Load Solidity File'
+						                size: self.size
+						                on_release: root.show_load(self.text, root.select_file)
+				        		
+		                    
+		                            
+		                        BoxLayout:
+		                        	id: scw
+		                        	canvas.before:
+								        Color:
+								            rgba: 0.08,0.03,0.03, 1
+								        Line:
+								            width: 2
+								            rectangle: self.x, self.y, self.width, self.height
+		    						orientation: 'vertical'
+			    					ScaleLabel:
+					        			canvas.before:
+											Color:
+												#rgb: 0.51,0.49,0.49
+												rgb: .5, .5,0.5
+												#rgb: 0.847, 0.878, 0.909
+											Rectangle:
+												pos: scw.pos
+												size: scw.size
+										bold: True
+										italic: True
+					        			text: "Solidity Compiler"
+					        			color: 0,1,1,1
+					        			
+			                        Spinner:
+							            id: solc
+					        			pos_hint: {'center_x': .5, 'center_y': .5}
+							            important: True
+							            text: 'Select/Change Compiler Version'
+							            values: ['v0.8.14','v0.8.13','v0.8.12','v0.8.11','v0.8.10','v0.8.9','v0.8.8','v0.8.7','v0.8.6','v0.8.5','v0.8.4','v0.8.3','v0.8.2','v0.8.1','v0.8.0','v0.7.6','v0.7.5','v0.7.4','v0.7.3','v0.7.2','v0.7.1','v0.7.0','v0.6.12','v0.6.11','v0.6.10','v0.6.9','v0.6.8','v0.6.7','v0.6.6','v0.6.5','v0.6.4','v0.6.3','v0.6.2','v0.6.1','v0.6.0','v0.5.17','v0.5.16','v0.5.15','v0.5.14','v0.5.13','v0.5.12','v0.5.11','v0.5.10','v0.5.9','v0.5.8','v0.5.7','v0.5.6','v0.5.5','v0.5.4','v0.5.3','v0.5.2','v0.5.1','v0.5.0']
+							            #on_text: root.select_solidity_compiler(self.text) 
+				            		
+			            		Button:
+			            			id: compile_btn
+		                            text:'Compile'
+		                            on_release: root.compile_code(source_code.text, solc.text)
+		                        
+			            	
+				    			
+	    			BoxLayout:
+	    				ScrollView:
+	    					bar_width: 30
+							bar_color: 0, 0, 1, 1   
+							bar_inactive_color: 0, 0, 0, 1 
+							effect_cls: "ScrollEffect"
+							scroll_type: ['bars','content']
+							
+	    					#id: src_sol
+							
+					        CodeInput:
+						        id: source_code
+						        #size_hint_x: 0.8
+								lexer: SolidityLexer()
+								text: "Solidity Source Code"
+								bold: True
+								selection_color:[151./255, 51./255, 151./255, 0.6]
+								font_size: 14
+								multiline: True
+								background_normal: ''
+								background_color: 1, 1, 1, 1#1,1,1,1, 230./255
+								#height: max(self.minimum_height, src_sol.height)		
+			    				#size_hint: 1,1
+			    				#ScaleLabel:
+				    			#		id: num_l
+				    			#		ext_size: self.size
+								#	    halign: 'left'
+								#	    valign: 'top'
+				    			#		size_hint_x: 0.02
+						    	#		borders: 5, 'solid', (1,0,0,1)
+						        #    	canvas.before:
+								#			Color:
+								#				rgb: 0.08,0.03,0.03
+								#			Rectangle:
+								#				pos: self.pos
+								#				size: self.size
+				    			#		color:(1,1,1,1)
+				    			#		text: "1\n2\n3"
+				    			#		pos:num_l.pos
+			    				
+									
+								#ScaleLabel:
+					    		#	size_hint_x: 0.02
+					    		#	borders: 5, 'solid', (1,0,0,1)
+					            #	canvas.before:
+								#		Color:
+								#			rgb: 0.08,0.03,0.03
+								#		Rectangle:
+								#			pos: self.pos
+								#			size: self.size
+			    				#	color:(0,0,0,1)
+			    				#	text: "1\n2\n3"
+						
+						
+					              			
+					BoxLayout:
+			    		orientation: 'horizontal'
+			    		size_hint: 1, 0.12
+			    		canvas.before:
+					        Color:
+					            rgba: 0.08,0.03,0.03, 1
+					        Line:
+					            width: 2
+					            rectangle: self.x, self.y, self.width, self.height
+			    		ScaleLabel:
+			    			borders: 5, 'solid', (1,0,0,1)
+			            	canvas.before:
+								Color:
+									rgb: 0.08,0.03,0.03
+								Rectangle:
+									pos: self.pos
+									size: self.size
+							bold: True
+							italic: True
+			    			text: "M\nS\nG"
+			    			size_hint_x:.1
+			    			#color: 1,1,1,1
+			    		
+						TextInput:
+			            	id: opcode_comment_text
+			            	canvas.before:
+						        Color:
+						            rgba: 0.08,0.03,0.03, 1
+						        Line:
+						            width: 2
+						            rectangle: self.x, self.y, self.width, self.height
+			                text: "comment"
+			                background_normal: ""
+			    			background_color: (1,1,1, 1)
+			    			color: (0.08,0.03,0.03, 1)
+			    			bold: True
+			    			multiline: True
+			    			readonly: True
+			    			font_size: 18
+			    			
+			    	BoxLayout:
+			    		orientation: 'horizontal'
+			    		size_hint: 1, 0.05
+			    		ScaleLabel:
+							bold: True
+							italic: True
+			    			text: "Designed and Developed by PLANER LAB, IIT Patna. Contributors:: Fajge Akshay M., Prof. Raju Halder."
+			    			background_color: (0, 1, 0, 1)
+		    				size_hint: 1, 0.07
+        					pos_hint: {'center_x': .5, 'center_y': .5}
+		    				color: 0.08,0.03,0.03, 1
+			    			#size_hint_x:.1
+			    			#color: 1,1,1,1		
+				ScrollView:
+			        id: sv_anlz_vz
+			        size_hint_x: None
+			        width: 1
+			        ScreenManager:
+						id: sm
+						transition: NoTransition()
+						
+						Screen:
+							name: 'Live Variable'
+							canvas.before:
+						        Color:
+						            rgb: .2, .2, .2
+						        Rectangle:
+						            size: self.size
+						            
+						    BoxLayout:
+						    	orientation: 'vertical'
+						    	padding: 5
+						        spacing: 5
+						        size_hint: 1, 1
+						        pos_hint: {'top': 1}
+						    	Label:
+				        			id: da_label
+				        			size_hint_y: 0.02
+				        			canvas.before:
+										Color:
+											#rgb: 0.51,0.49,0.49
+											rgb: 38./255, 0, 77./255
+											#rgb: 0.847, 0.878, 0.909
+										Rectangle:
+											pos: sm.pos
+											size: sm.size
+									bold: True
+									italic: True
+				        			text: "Data Flow Analysis: Live Variable"
+				        			
+						        BoxLayout:
+						        	id: cfg_nodes_da
+						            orientation: "vertical"
+						            spacing: 10, 10
+						            size: 450, 40
+						            size_hint: None, None
+						            
+						        ScrollView:
+						        	id:da_solution
+									TextInput:
+								        text: "Akshay"
+								        size_hint: 1, None
+								        height: max((len(self._lines)+1) * self.line_height, da_solution.height)
+										
+						
+						Screen:
+							name: 'Code'
+							canvas.before:
+						        Color:
+						            rgb: .2, .2, .2
+						        Rectangle:
+						            size: self.size
+						    BoxLayout:
+						    	orientation: 'vertical'
+						    	padding: 5
+						        spacing: 5
+						        size_hint: 1, 1
+						        pos_hint: {'top': 1}
+						    	Label:
+				        			id: urc_label
+				        			size_hint_y: 0.02
+				        			canvas.before:
+										Color:
+											#rgb: 0.51,0.49,0.49
+											rgb: 38./255, 0, 77./255
+											#rgb: 0.847, 0.878, 0.909
+										Rectangle:
+											pos: sm.pos
+											size: sm.size
+									bold: True
+									italic: True
+				        			text: ""
+				        			
+						        BoxLayout:
+							        ScrollView:
+										id: sv_urc_src
+										#size_hint: (1, .9)
+										bar_width: 30
+										bar_color: 0, 0, 1, 1   
+										bar_inactive_color: 0, 0, 0, 1 
+										effect_cls: "ScrollEffect"
+										scroll_type: ['bars','content']
+										bold: True
+										selection_color:[151./255, 51./255, 151./255, 0.6]
+										font_size: 14
+										multiline: True
+										background_normal: ''
+										background_color: 1, 1, 1, 1
+										CodeInput:
+									        id: urc_source_code									   
+											lexer: SolidityLexer()
+											text: "Solidity Source Code"
+											
+						Screen:
+							name: 'CFG'
+							canvas.before:
+						        Color:
+						            rgb: .2, .2, .2
+						        Rectangle:
+						            size: self.size
+						    BoxLayout:
+						    	orientation: 'vertical'
+						    	padding: 5
+						        spacing: 5
+						        size_hint: 1, 1
+						        pos_hint: {'top': 1}
+						    	Label:
+				        			id: cfg_label
+				        			size_hint_y: 0.02
+				        			canvas.before:
+										Color:
+											#rgb: 0.51,0.49,0.49
+											rgb: 38./255, 0, 77./255
+											#rgb: 0.847, 0.878, 0.909
+										Rectangle:
+											pos: sm.pos
+											size: sm.size
+									bold: True
+									italic: True
+				        			text: "Control Flow Diagram"
+				        			
+						        BoxLayout:
+							        ScrollView:
+										id: sv_cfg_img
+										#size_hint: (1, .9)
+										bar_width: 10
+										bar_color: 0, 0, 1, 1   
+										bar_inactive_color: 0, 0, 0, 1 
+										effect_cls: "ScrollEffect"
+										scroll_type: ['bars','content']
+										Image:
+											id: cfg_img_widget
+											size_hint: (None, None)
+											source: '../../lib/img/cfg.png'
+											#size: self.texture_size
+											allow_stretch: True
+											keep_ratio: True
+									        
+							            
+						Screen:
+							name: 'Visualizer'
+							canvas.before:
+						        Color:
+						            rgb: .2, .2, 1
+						        Rectangle:
+						            size: self.size
+				            BoxLayout:
+				            	orientation:"horizontal"
+				            	
+							    ScrollView:
+							        id: sv_vz
+							        size_hint_x: None
+							        width: 0.16
+							        
+									BoxLayout:
+										canvas:
+						        			Color:
+								                rgb: 179./255,179./255, 204./255, 1
+								            Rectangle:
+								                pos: self.x, self.y
+								                size: self.size	
+						        		orientation: 'vertical'
+						        		size_hint: 1,1
+										ScaleLabel:
+						        			borders: 5, 'solid', (1,0,0,1)
+							        		canvas.before:
+												Color:
+													rgb: 153./255, 102./255, 255./255
+												Rectangle:
+													pos: self.pos
+													size: self.size
+											bold: True
+											italic: True
+						        			text: ">>> Bytes <<<"
+						        			size_hint_y: 0.035
+						        			color: 0,0,0,1
+										
+							        	ScrollView:
+									        pos: root.pos
+						        			bar_width: 30
+						        			bar_margin: 40
+									        on_scroll_y: True
+									        scroll_type:['bars', 'content']
+											size_hint_y: 0.7
+											ListView:
+									        	id: opcodes_list_view
+									        	canvas.before:
+											        Color:
+											            rgba: 1,1,1, 1
+											        Line:
+											            width: 2
+											            rectangle: self.x, self.y, self.width, self.height
+									        	adapter:
+									            	ListAdapter(data=["HIadadadad","afsdafgagsga"], selection_mode = 'single', cls = 'Opcode')
+									        	
+							        	BoxLayout:
+											orientation: 'horizontal'
+											size_hint_y: 0.035
+											id: comp_info
+											canvas.before:
+										        Color:
+										            rgba: 0.08,0.03,0.03, 1
+										        Line:
+										            width: 2
+										            rectangle: self.x, self.y, self.width, self.height
+											canvas:
+												Color:
+													rgba: 235./255, 235./255, 235./255, 1 
+												Rectangle:
+													pos: self.pos
+													size: self.size
+													
+											ScaleLabel:
+												size_hint_x:.4
+								    			borders: 5, 'solid', (1,0,0,1)
+												bold: True
+												italic: True
+								    			text: "OPCODE:"
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+										        color: 0, 0, 0, 1
+										        	
+											ScaleLabel:
+												id: compiled_output_text
+												
+												size_hint_x:.6
+												borders: 5, 'solid', (1,0,0,1)
+												bold: True
+												italic: True
+								    			text: "-"
+								    			#font_size: '18sp'
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+											    color: (0, 77./255, 0, 1)
+											    
+								    	ScrollView:
+									        id: sv_gas_info
+									        size_hint_y: None
+									        height: 0.01
+									        
+									        BoxLayout:
+												padding: (2,1,2,1)					        
+									        	orientation: 'vertical'
+									        	spacing: 1
+									        	canvas.before:
+											        Color:
+											            rgba: 0.08,0.03,0.03, 1
+											        Line:
+											            width: 2
+											            rectangle: self.x, self.y, self.width, self.height
+									        	canvas:
+													Color:
+														rgb: 1, 204./255, 204./255
+													Rectangle:
+														pos: self.pos
+														size: self.size
+									        	ScaleLabel:
+									        		pos_hint: {'center_x': .5, 'center_y': .5}
+													size_hint_y:.1
+									    			borders: 5, 'solid', (1,0,0,1)
+									            	canvas.before:
+														Color:
+															rgb: 0, 0, 0, 1
+														Rectangle:
+															pos: self.pos
+															size: self.size
+													bold: True
+									    			text: "#GAS Required For -"
+									    			text_size: self.size
+												    halign: 'center'
+												    valign: 'middle'
+											    	color: 1,0,0,1
+											    	
+									        	BoxLayout:
+									        		pos_hint: {'center_x': .5, 'center_y': .5}
+													orientation: 'horizontal'
+													size_hint_y: 0.10
+												    ScaleLabel:
+												    	id: mnemonic
+														size_hint_x:.5
+										    			borders: 5, 'solid', (1,0,0,1)
+										            	
+														bold: True
+														italic: True
+										    			text: "OPCODE:"
+										    			text_size: self.size
+													    halign: 'center'
+													    valign: 'middle'
+													    color: (0,0,0,1) 
+													       	
+													ScaleLabel:
+														pos_hint: {'center_x': .5, 'center_y': .5}
+														id: mn_g
+														size_hint_x:.5
+														borders: 5, 'solid', (1,0,0,1)
+										            	
+														bold: True
+														italic: True
+										    			text: "-"
+										    			#font_size: '18sp'
+										    			text_size: self.size
+													    halign: 'center'
+													    valign: 'middle'
+													    color: 1, 0, 0, 1
+													    
+										        BoxLayout:
+										        	pos_hint: {'center_x': .5, 'center_y': .5}
+													orientation: 'horizontal'
+													size_hint_y: 0.10
+												    ScaleLabel:
+												    	pos_hint: {'center_x': .5, 'center_y': .5}
+												    	id: memory
+														size_hint_x:.5
+										    			borders: 5, 'solid', (1,0,0,1)
+										            	
+														bold: True
+														italic: True
+										    			text: "EVM Mem:"
+										    			text_size: self.size
+													    halign: 'center'
+													    valign: 'middle'
+													    color: (0,0,0,1)
+													        	
+													ScaleLabel:
+														pos_hint: {'center_x': .5, 'center_y': .5}
+														id: me_g
+														size_hint_x:.5
+														borders: 5, 'solid', (1,0,0,1)
+										            	
+														bold: True
+														italic: True
+										    			text: "-"
+										    			#font_size: '18sp'
+										    			text_size: self.size
+													    halign: 'center'
+													    valign: 'middle'
+													    color: 1, 0, 0, 1	
+				
+										#Required GAS INFO:
+										BoxLayout:
+											pos_hint: {'center_x': .5, 'center_y': .5}
+											orientation: 'horizontal'
+											size_hint_y: 0.035
+											id: comp_info
+											canvas.before:
+										        Color:
+										            rgba: 0.08,0.03,0.03, 1
+										        Line:
+										            width: 1
+										            rectangle: self.x, self.y, self.width, self.height
+											ScaleLabel:
+												size_hint_x:.4
+								    			borders: 5, 'solid', (1,0,0,1)
+								            	canvas.before:
+													Color:
+														rgb: 1,1,0.7
+													Rectangle:
+														pos: self.pos
+														size: self.size
+												bold: True
+												italic: True
+								    			text: "GAS Req:"
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+								    			color: (0, 0, 0, 1)
+								    		
+								    		ScaleButton:
+												id: req_gas
+												size_hint_x:.6
+												borders: 5, 'solid', (1,0,0,1)
+												bold: True
+												italic: True
+								    			text: "-"
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+											    background_normal: ''
+											    background_color: 1, 204./255, 204./255, 1
+											    color: 1,0,0,1
+											    on_release: root.manage_widget(sv_gas_info)
+								    		#Available GAS INFO:
+										BoxLayout:
+											orientation: 'horizontal'
+											size_hint_y: 0.035
+											id: comp_info
+											ScaleLabel:
+												size_hint_x:.4
+								    			borders: 5, 'solid', (1,0,0,1)
+								            	canvas.before:
+													Color:
+														#rgb: 0.51,0.49,0.49
+														rgb: 1,1,0.7#rgb: 0.08,0.03,0.03
+														#rgb: 0.847, 0.878, 0.909
+													Rectangle:
+														pos: self.pos
+														size: self.size
+												bold: True
+												italic: True
+								    			text: "GAS Avl:"
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+								    			color: (0, 0, 0, 1)
+								    			
+								    		ScaleLabel:
+												id: avl_gas
+												size_hint_x:.6
+												borders: 5, 'solid', (1,0,0,1)
+								            	canvas.before:
+													Color:
+														rgb: 235./255, 235./255, 235./255, 1#0.08,0.03,0.03
+													Rectangle:
+														pos: self.pos
+														size: self.size
+												bold: True
+												italic: True
+								    			text: "-"
+								    			#font_size: '18sp'
+								    			text_size: self.size
+											    halign: 'center'
+											    valign: 'middle'
+											    color: (0, 77./255, 0, 1)#0, 102./255, 0, 1
+											    
+							        	ScaleLabel:
+						        			borders: 5, 'solid', (1,0,0,1)
+						        			
+							        		canvas.before:
+												Color:
+													#rgb: 0.51,0.49,0.49
+													rgb: 0.44,0.15,0.49#0.18,0,1#0.156, 0.356, 0.886
+													#rgb: 0.847, 0.878, 0.909
+												Rectangle:
+													pos: self.pos
+													size: self.size
+											bold: True
+											italic: True
+						        			text: ">>>>> Execution Controls <<<<<"
+						        			size_hint_y: 0.025		
+										
+										BoxLayout:
+							        		id: function
+							        		orientation: 'vertical'
+							        		size_hint: 1, 0.1
+							        		canvas.before:
+										        Color:
+										            rgba: 0.08,0.03,0.03, 1
+										        Line:
+										            width: 2
+										            rectangle: self.x, self.y, self.width, self.height
+									        canvas:
+									            Color:
+									                rgb: 0, 0, 0
+									            Rectangle:
+									                size: self.size
+									        BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint_x: 1		
+									        	ScaleButton:
+									        		text: "Next"
+									                on_release: root.select_next()
+									                borders: 5, 'solid', (1,0,0,1)
+									                size_hint_x: 0.33
+									                
+									        		
+									        	ScaleButton:
+									        		id: auto 
+									        		text: "Play"			
+									                on_release: root.execute_all()
+									                size_hint_x: 0.34
+										                
+										            
+													        	
+									            ScaleButton:
+									        		text: "Pause"			
+									                on_release: root.pause_execution()
+								            		size_hint_x: 0.33
+									            
+											BoxLayout:
+								            	id: speed
+								            	orientation: 'horizontal'
+								            	size_hint_x: 1
+								            	
+								            	ScaleButton:
+									                id: minus
+									                size_hint_x: 0.2
+									                on_release: root.decrease_speed(pb.value, pb.max)
+										            Image:
+										            	pos: self.parent.center_x - self.width / 2, self.parent.center_y - self.height / 2
+										                size: self.parent.size
+											        	source: '../../lib/img/minus.png'
+											        	allow_stretch: True
+											        	keep_ratio: False
+								            	
+											        
+											    ScaleLabel:
+											    	borders: 5, 'solid', (1,0,0,1)
+									        		canvas.before:
+														Color:
+															#rgb: 0.51,0.49,0.49
+															rgb: 1,0.15,0.2#0.18,0,1#0.156, 0.356, 0.886
+															#rgb: 0.847, 0.878, 0.909
+														Rectangle:
+															pos: self.pos
+															size: self.size
+													bold: True
+													italic: True
+								        			text: ":: SPEED CONTROL ::"
+								        			#size_hint_y: 0.6	
+											    	
+											    ScaleButton:
+									                id: plus
+										            size_hint_x: 0.2
+										            on_release: root.increase_speed(pb.value, pb.max)
+										            Image:
+										                pos: self.parent.center_x - self.width / 2, self.parent.center_y - self.height / 2
+										                size: self.parent.size
+											        	source: '../../lib/img/plus.png'
+											        	allow_stretch: True
+											        	keep_ratio: False        	
+												     
+								            #ScaleButton:
+								        	#	text: "RESET"			
+								            #    on_release: root.reset_current()
+								                
+								            ProgressBar:
+								            	id: pb
+								            	value: 1
+								            	max: 2
+								            	size_hint_y: .2
+								            	
+										                 
+								            #BoxLayout:
+								            #	id: hidden 
+								        	#	orientation: 'horizontal'
+								        	#	size_hint_y: 0.5
+								        	#	disable: True
+									        #   ScaleLabel:
+									        #    	borders: 5, 'solid', (1,0,0,1)
+									        #		canvas.before:
+											#			Color:
+											#				#rgb: 0.51,0.49,0.49
+											#				rgb: 0.44,0.15,0.49#0.18,0,1#0.156, 0.356, 0.886
+											#				#rgb: 0.847, 0.878, 0.909
+											#			Rectangle:
+											#				pos: self.pos
+											#				size: self.size
+											#		bold: True
+											#		italic: True
+								        	#		text: "Exe Speed::"
+								        	#		size_hint_x: 0.5	
+											
+								BoxLayout:
+					        		orientation: 'vertical'
+					        		size_hint_x:0.84
+					        		canvas.before:
+								        Color:
+								            rgba: 0.08,0.03,0.03, 1
+								        Line:
+								            width: 2
+								            rectangle: self.x, self.y, self.width, self.height
+					        		canvas:
+					        			Color:
+							                rgb: 179./255, 204./255, 1
+							            Rectangle:
+							                pos: self.x, self.y
+							                size: self.size	
+							                
+					            	BoxLayout:
+						        		orientation: 'horizontal'
+						        		size_hint:1,0.3
+						        		
+						        		BoxLayout:
+							        		orientation: 'vertical'
+							        		size_hint_x: 0.5
+											#pos_hint: {'center_x': .5, 'center_y': .5}
+								        	canvas.before:
+										        Color:
+										            rgba: 0.08,0.03,0.03, 1
+										        Line:
+										            width: 2
+										            rectangle: self.x, self.y, self.width, self.height
+							        		ScaleLabel:
+							        			id: sep
+							        			size_hint_y: 0.04
+							        			#pos_hint: {'center_x': .5, 'center_y': .5}
+							        			borders: 0, 'solid', (1,0,0,1)
+												bold: True
+												italic: True
+							        			text: "::Environmental input::"
+							        			#size: self.size
+							        			canvas.before:
+													Color:
+														rgb: 0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+													Rectangle:
+														pos: self.pos
+														size: self.size
+						        				canvas:
+								        			Color:
+										                rgb: 1., 0., 0.
+										            Rectangle:
+										                pos: sep.x, sep.y
+										                size: sep.width, 2
+											BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint_y:0.04
+								        		ScaleLabel:
+								        			borders: 5, 'solid', (1,0,0,1)
+									        		size: self.size
+									        		font_size: 12
+									        		canvas.before:
+														Color:
+															rgb: 1,1,0.7#0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+														Rectangle:
+															pos: self.pos
+															size: self.size
+													bold: True
+													italic: True
+								        			color: (0, 0, 0, 1)
+								        			text: "GAS LIMIT:"
+								        			size_hint: 0.25, 1
+							        			TextInput:
+							        				id: gaslimit
+							        				size: self.size
+							        				pos_hint: {'center_x': .2, 'center_y': .5}
+							        				text:"0"
+							        				size_hint: 0.75, 1
+							        				font_size:12
+							        		
+											BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint_y:0.04
+								        		ScaleLabel:
+								        			borders: 5, 'solid', (1,0,0,1)
+									        		size: self.size
+									        		canvas.before:
+														Color:
+															rgb: 1,.8,0.7#0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+														Rectangle:
+															pos: self.pos
+															size: self.size
+													bold: True
+													italic: True
+								        			color: (0, 0, 0, 0.7)
+								        			text: "Value:"
+								        			size_hint: 0.25, 1
+								        			
+							        			TextInput:
+							        				id: callvalue
+							        				size: self.size
+							        				pos_hint: {'center_x': .2, 'center_y': .5}
+							        				text:"0"
+							        				size_hint: 0.75, 1
+							        				font_size:12
+							        		
+							        		BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint_y:0.04
+								        		ScaleLabel:
+								        			borders: 5, 'solid', (1,0,0,1)
+									        		size: self.size
+									        		canvas.before:
+														Color:
+															rgb: 0,0,0#0.44,0.15,0.49#0.18,0,1#0.44,0.15,0.49
+														Rectangle:
+															pos: self.pos
+															size: self.size
+													bold: True
+													italic: True
+								        			background_color: (0, 1, 0, 0.7)
+								        			text: "::Contract::"
+							        				size_hint: 0.25, 1
+								        		Spinner:
+										            id: contract_list
+										            size_hint: 0.75, 1
+								        			pos_hint: {'center_x': .5, 'center_y': .5}
+										            important: True
+										            text: 'Select Contract'
+										            #size_hint_y: 0.04
+								        			background_color: (0.44,0.15,0.49, 0.7)
+								        			on_text:root.change_contract(self.text)
+								        			
+							        		BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint: 1, 0.05
+							        			pos_hint: {'center_x': .5, 'center_y': .5}
+								        		TextInput:
+								        			id:constr_args
+								        			text:"constructor arguments"
+								        			size_hint_x:0.75
+								        		ScaleButton:
+								        			id: deploy_btn
+							        				size_hint_x:0.25
+							        				text:"Deploy"
+							        				disabled: True
+							        				on_press:root.read_environment_input(self.text)	
+							        							
+							        		ScaleLabel:
+							        			borders: 5, 'solid', (1,0,0,1)
+								        		canvas.before:
+													Color:
+														rgb: 0.44,0.15,0.49#0.156, 0.356, 0.886#0,0,0#0.18,0,1#0.44,0.15,0.49
+													Rectangle:
+														pos: self.pos
+														size: self.size
+												bold: True
+												italic: True
+							        			background_color: (0, 1, 0, 1)
+							        			text: "::Functions::" 
+									    		size_hint: 1, 0.025
+							        			pos_hint: {'center_x': .5, 'center_y': .5}
+									    	
+									    	Spinner:
+									            id: fun_list
+									            size_hint: 1, 0.05
+							        			pos_hint: {'center_x': .5, 'center_y': .5}
+									            important: True
+									            text: 'Select Function'
+									            on_text:fun_args.text = ','.join(root.contract_obj.get_ffunctions()[self.text]['input_types']) if self.text!="Select Function" else ""; call_btn.disabled = False\
+									            #root.scm.get_ffunctions()[self.text]['input_types']
+									       
+											BoxLayout:
+								        		orientation: 'horizontal'
+								        		size_hint: 1, 0.05
+							        			pos_hint: {'center_x': .5, 'center_y': .5}
+								        		TextInput:
+								        			id:fun_args
+								        			text:""
+								        			size_hint_x:0.75
+								        			multiline : False
+								        		ScaleButton:
+							        				id: call_btn
+							        				size_hint: 0.25, 1
+							        				text:"Call"
+							        				on_press:root.read_environment_input(self.text)
+													disabled: True
+						        		
+						        		BoxLayout:
+							        		orientation: 'vertical'
+							        		size_hint_x:0.5
+							        		ScaleLabel:
+								            	id: separator
+								            	borders: 5, 'solid', (1,1,1,1)
+												bold: True
+												italic: True
+							        			text: "EVM MEMORY VIEW"
+							        			size_hint_y: 0.25
+							        			color: (0, 0, 0, 1)
+								        		canvas.before:
+													Color:
+														rgb: 153./255, 102./255, 255./255
+													Rectangle:
+														pos: self.pos
+														size: self.size
+												
+								        		canvas:
+								        			Color:
+										                rgb: 1., 0., 0.
+										            Rectangle:
+										                pos: separator.x, separator.y
+										                size: separator.width, 2
+								        			
+							        		ListView:
+							        			id: memory_list_view
+											    adapter:
+							            			ListAdapter(data=[], cls = 'EVM')
+							            		size_hint_y:1.88
+					        		        
+									BoxLayout:
+					        			orientation: 'vertical'
+					        			size_hint: 1, 0.6
+								                	
+										ScaleLabel:
+											id: stv
+						        			borders: 5, 'solid', (1,0,1,1)
+											canvas.before:
+												Color:
+													rgb: 153./255, 102./255, 255./255
+												Rectangle:
+													pos: self.pos
+													size: self.size
+											canvas:
+							        			Color:
+									                rgb: 1., 0., 0., 1.
+									            Rectangle:
+									                pos: stv.x, stv.y
+									                size: stv.width, 2
+									                
+											bold: True
+											italic: True
+						        			text: "STACK VIEW"
+						        			size_hint_y: 0.05
+						        			color: (0,0,0,1)
+						        		ListView:
+						        			id: stack_list_view
+						        			size_hint_y: 0.6
+						        			adapter:
+						            			ListAdapter(data=[], cls = 'Stack')
+						            			
+						            	ScaleLabel:
+						        			id: stv
+						        			canvas.before:
+												Color:
+													#rgb: 0.51,0.49,0.49
+													rgb: 0.08,0.03,0.03
+													#rgb: 0.847, 0.878, 0.909
+												Rectangle:
+													pos: self.pos
+													size: self.size
+											bold: True
+											italic: True
+						        			text: "STORAGE VIEW"
+						        			markup:True
+						        			size_hint_y: 0.05
+						        			color: (0, 0, 0, 1)
+						        			canvas.before:
+												Color:
+													rgb: 153./255, 102./255, 255./255
+												Rectangle:
+													pos: self.pos
+													size: self.size
+											
+							        		canvas:
+							        			Color:
+									                rgb: 1., 0., 0.
+									            Rectangle:
+									                pos: stv.x, stv.y
+									                size: stv.width, 2
+							        		
+						        			
+						        		ListView:
+						        			id: storage_list_view
+											adapter:
+						            			ListAdapter(data=[], cls = 'STORAGE')
+						            		size_hint_y: 0.3
+						    
+						
+				ScrollView:
+			        id: sv_options
+			        size_hint_x: None
+			        width: 0.16
+			        pos_hint: {'top_x': .5, 'top_y': .5}
+					BoxLayout:
+						pos_hint: {'top_x': .5, 'top_y': .5}
+						canvas:
+		        			Color:
+				                rgb: 50./255,50./255, 50./255, 1
+				            Rectangle:
+				                pos: self.x, self.y
+				                size: self.size	
+		        		orientation: 'vertical'
+		        		size_hint: 1,1
+		        		
+						ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Visualizer'
+				            group: 'g1'
+				            on_release:root.manage_widget(sv_anlz_vz, False, self.text); sm.current = 'Visualizer'
+				            
+				            	
+						BoxLayout:
+			        		orientation: 'horizontal'
+			        		pos_hint: {'top_x': .5, 'top_y': .5}
+							ToggleButton:
+					            size_hint_y: None
+					            height: '48dp'
+					            text: 'CFG'
+					            group: 'g1'
+					            on_release:root.manage_widget(sv_anlz_vz, False, self.text); sm.current = 'CFG'
+					            
+					        BoxLayout:
+				        		orientation: 'vertical'
+				        		size_hint: 1, 0.2
+				        		size_hint_y: None
+			        			height: 20
+				        		
+						        Label:
+						            text: 'src_code'
+						
+						        CheckBox:
+						        	#pos_hint: {'center_x': .5, 'center_y': .5}
+						        	id: cb_cfg_src
+						            size_hint_y: None
+						            height: '48dp'
+									on_active: root.on_checkbox_active(self, self.active)	        
+					        
+						ScaleLabel:
+							id: akshay
+		        			borders: 5, 'solid', (1,0,0,1)
+			        		canvas.before:
+								Color:
+									rgb: 153./255, 102./255, 255./255
+								Rectangle:
+									pos: akshay.pos
+									size: akshay.size
+							bold: True
+							italic: True
+		        			text: "Analysis(DF) of Smart Contract"
+		        			size_hint_y: None
+		        			height: 20
+		        			color: 0,0,0,1
+		        			
+				            	
+		        		ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Live Variables'
+				            group: 'g1'
+				            on_release:root.analyze_live_variable(self.text)
+					       
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Available Expression'
+				            group: 'g1'
+				            on_release:root.analyze_available_expressions(self.text)
+				            
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Reaching Definition'
+				            group: 'g1'
+				            on_release:root.analyze_reaching_definitions(self.text)
+				            
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Very Busy Expression'
+				            group: 'g1'
+		        			on_release:root.analyze_very_busy_expressions(self.text)
+		        		
+		        		
+		        		ScaleLabel:
+		        			id: akshay
+		        			borders: 5, 'solid', (1,0,0,1)
+			        		canvas.before:
+								Color:
+									rgb: 153./255, 102./255, 255./255
+								Rectangle:
+									pos: akshay.pos
+									size: akshay.size
+							bold: True
+							italic: True
+		        			text: ">>> Perform Optimization <<<"
+		        			size_hint_y: None
+		        			height: 20
+		        			color: 0,0,0,1
+						
+						
+						ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Unreachable Code'
+				            group: 'g2'
+				            on_release:root.remove_code(self.text, 'Code')
+					        
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Dead Code'
+				            group: 'g2'
+				            on_release:root.remove_code(self.text, 'Code')
+				            
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Optimized Code'
+				            group: 'g2'
+				            on_release:root.remove_code(self.text, 'Code')
+				            
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'Optimized Code Using BS'
+				            group: 'g2'
+				            on_release:root.remove_code(self.text, 'Code')
+				            
+				            
+				        ToggleButton:
+				            size_hint_y: None
+				            height: '48dp'
+				            text: 'OP 5'
+				            group: 'g2'
+			                    	
+###############################################
+	        				            	
+<ScaleButton>:
+	id: separator
+	#background_color:0,1,1
+	#foreground_color:0.12,0.06,0.04, 4
+	#background_color:0.09,0.05,0.02
+	bold: True
+	canvas:
+		Color:
+		    rgb: 1, 1, 1
+		Rectangle:
+		    pos: separator.x, separator.y
+		    size: separator.width, 2
+	
+<EnvironmentInput>
+	BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+    	ScaleLabel:
+    		id: input_msg
+    		text: ""
+    	
+
+<SelectDialog>:
+	filechooser: filechooser
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            dirselect: False
+            filters: ["*.sol"]
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            ScaleButton:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            ScaleButton:
+                text: "Select File"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<ScaleLabel@Label>:
+	_scale: 1. if self.texture_size[0] < self.width else float(self.width) / self.texture_size[0]
+	canvas.before:
+		PushMatrix
+		Scale:
+			origin: self.center
+			x: self._scale or 1.
+			y: self._scale or 1.
+	canvas.after:
+		PopMatrix
+		
+<ScaleButton@Button>:
+	state_image: self.background_normal if self.state == 'normal' else self.background_down
+	disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
+	_scale: 1. if self.texture_size[0] < self.width else float(self.width) / self.texture_size[0]
+	canvas:
+		Color:
+			rgba: self.background_color
+		BorderImage:
+			border: self.border
+			pos: self.pos
+			size: self.size
+			source: self.disabled_image if self.disabled else self.state_image
+		PushMatrix
+		Scale:
+			origin: self.center
+			x: self._scale or 1.
+			y: self._scale or 1.
+		Color:
+			rgba: self.disabled_color if self.disabled else self.color
+		Rectangle:
+			texture: self.texture
+			size: self.texture_size
+			pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
+		PopMatrix
+		
+    
+    
+    
+<Zoom>:
+    id: cfg_img
+    Image:
+        source: '../../lib/img/cfg.png'
+        allow_stretch: True
+        keep_ratio: True
+        
+        		
+#Section separator  
+#Label:
+#    canvas.before:
+#        Color: 
+#            rgba: (1,1,1,1)
+#        Rectangle:
+#            size: self.size
+#            pos: self.pos
+#    size_hint_y: None
+#    height: 1                

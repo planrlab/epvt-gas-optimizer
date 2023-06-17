@@ -1,0 +1,54 @@
+digraph cluster_2 {
+	subgraph cluster_3 {
+		node [fillcolor="#ccccff" fontcolor=black fontname="Courier bold" fontsize=14 shape=oval style=filled]
+		color=snow2 fillcolor=snow1 fontcolor="#1a0000" fontname="Courier bold" fontsize=16 label="Contract::Sample" style=filled
+		start_Sample [label="Contract Address" shape=Mdiamond style=filled]
+		stop_Sample [label=End shape=Msquare style=filled]
+		Contract -> start_Sample [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		1 [label="int result" shape=rectangle style=filled]
+		start_Sample -> 1 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		1 -> stop_Sample [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		subgraph cluster_4 {
+			node [color=black fillcolor=white fontcolor=black fontname="Courier bold italic" fontsize=12 shape=oval style=filled]
+			color=snow2 fillcolor="#e6e6ff" fontcolor="#00004d" fontname="Courier bold italic" fontsize=14 label="Function::factorial" style=filled
+			START_factorial [label=start shape=Mdiamond style=filled]
+			STOP_factorial [label=stop shape=Msquare style=filled]
+			2 [label="int number" shape=rectangle style=filled]
+			START_factorial -> 2 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			3 [label=int shape=rectangle style=filled]
+			2 -> 3 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			subgraph cluster_5 {
+				node [color=black fillcolor=snow1 fontcolor=black fontname="Courier bold" fontsize=12 shape=oval style=filled]
+				fillcolor="#f5f5ef" fontcolor=darkslategray fontname="Courier bold" fontsize=16 label="" style=filled
+				4 [label="int answer" shape=rectangle style=filled]
+				5 [label="int answer1" shape=rectangle style=filled]
+				4 -> 5 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				6 [label="int b = 5" shape=rectangle style=filled]
+				5 -> 6 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				subgraph cluster_6 {
+					node [fillcolor="#ffff66" fontcolor=black fontname="Courier bold" fontsize=12 shape=diamond style=filled]
+					color=snow2 fillcolor=snow3 fontcolor=darkslategray fontname="Courier bold" fontsize=16 label="" style=filled
+					JN_IF_1 [label=JN_IF_1 color=black fillcolor=darkgoldenrod fixedsize=true fontsize=10 shape=circle style=filled width=0.7]
+					7 [label="number>1" shape=rectangle style=filled]
+					subgraph cluster_7 {
+						node [color=black fillcolor=snow1 fontcolor=black fontname="Courier bold" fontsize=12 shape=oval style=filled]
+						fillcolor="#bbff99" fontcolor=darkslategray fontname="Courier bold" fontsize=16 label="" style=filled
+					}
+					7 -> JN_IF_1 [label=T color=darkgreen fillcolor=darkgreen fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+					7 -> JN_IF_1 [label=F color=red fillcolor=red fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				}
+				6 -> 7 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				8 [label="result = answer" shape=rectangle style=filled]
+				JN_IF_1 -> 8 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				9 [label="return result" shape=rectangle style=filled]
+				8 -> 9 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+				10 [label="answer = answer * number" shape=rectangle style=filled]
+			}
+			3 -> 4 [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+			9 -> STOP_factorial [label=return color="#4d004d" fillcolor="#4d004d" fontcolor="#4d004d" fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=bold]
+			10 -> STOP_factorial [label=return color="#4d004d" fillcolor="#4d004d" fontcolor="#4d004d" fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=bold]
+		}
+		start_Sample -> START_factorial [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+		STOP_factorial -> stop_Sample [color=black fillcolor=black fontcolor=black fontname="Courier bold" overlap=false penwidth=1.75 splines=true style=filled]
+	}
+}
